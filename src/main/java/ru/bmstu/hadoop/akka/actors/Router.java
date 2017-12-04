@@ -19,10 +19,10 @@ public class Router extends AbstractActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder().
-                match(GetPackMessage.class, v -> repository.forward(v, getContext())).
-                match(ExecutePackMessage.class, v -> {
-                    for (ExecutePackMessage.Test test : v.tests) {
-                        executors.forward(new ExecuteTestMessage(v.id, v.script, v.function, test), getContext());
+                match(GetPackMessage.class, message -> repository.forward(message, getContext())).
+                match(ExecutePackMessage.class, message -> {
+                    for (ExecutePackMessage.Test test : message.tests) {
+                        executors.forward(new ExecuteTestMessage(message, test), getContext());
                     }
                 }).
                 build();

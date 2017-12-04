@@ -6,8 +6,8 @@ public class StoreResultMessage {
     public final int id;
     public final Pack.Result result;
 
-    public StoreResultMessage(int id, Pack.Result result) {
-        this.id = id;
-        this.result = result;
+    public StoreResultMessage(ExecuteTestMessage message, String result) {
+        this.id = message.id;
+        this.result = new Pack.Result(message.test, result);
     }
 }

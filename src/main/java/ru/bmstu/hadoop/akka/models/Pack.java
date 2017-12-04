@@ -1,6 +1,7 @@
 package ru.bmstu.hadoop.akka.models;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import ru.bmstu.hadoop.akka.messages.ExecutePackMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +18,10 @@ public class Pack {
         private final String name;
         private final String result, expected;
 
-        public Result(String name, String result, String expected) {
-            this.name = name;
+        public Result(ExecutePackMessage.Test test, String result) {
+            this.name = test.name;
             this.result = result;
-            this.expected = expected;
+            this.expected = test.expected;
         }
 
         @SuppressWarnings("unused")

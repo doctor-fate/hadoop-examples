@@ -5,7 +5,6 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 import ru.bmstu.hadoop.akka.messages.ExecuteTestMessage;
 import ru.bmstu.hadoop.akka.messages.StoreResultMessage;
-import ru.bmstu.hadoop.akka.models.Pack;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -24,18 +23,18 @@ public class Executor extends AbstractActor {
         return Props.create(Executor.class, repository);
     }
 
-    private static String execute(ExecuteTestMessage v) throws ScriptException, NoSuchMethodException {
-        engine.eval(v.script);
+    private static String execute(ExecuteTestMessage message) throws ScriptException, NoSuchMethodException {
+        engine.eval(message.script);
         Invocable invocable = (Invocable) engine;
-        return invocable.invokeFunction(v.function, v.test.parameters).toString();
+        return invocable.invokeFunction(message.function, message.test.parameters).toString();
     }
 
     @Override
     public Receive createReceive() {
         return receiveBuilder().
-                match(ExecuteTestMessage.class, v -> {
-                    String result = execute(v);
-                    repository.tell(new StoreResultMessage(v.id, new Pack.Result(v.test.name, result, v.test.expected)), getSelf());
+                match(ExecuteTestMessage.class, message -> {
+                    String result = execute(message);
+                    repository.tell(new StoreResultMessage(message, result), getSelf());
                 }).
                 build();
     }

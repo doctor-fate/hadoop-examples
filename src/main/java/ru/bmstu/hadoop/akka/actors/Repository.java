@@ -20,9 +20,9 @@ public class Repository extends AbstractActor {
     public Receive createReceive() {
         return receiveBuilder().
                 match(GetPackMessage.class,
-                        v -> sender().tell(getPack(v.id), self())).
+                        message -> sender().tell(getPack(message.id), self())).
                 match(StoreResultMessage.class,
-                        v -> storeResult(v.id, v.result)).
+                        message -> storeResult(message.id, message.result)).
                 build();
     }
 

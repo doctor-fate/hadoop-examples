@@ -6,10 +6,10 @@ public class ExecuteTestMessage {
     public final String function;
     public final ExecutePackMessage.Test test;
 
-    public ExecuteTestMessage(int id, String script, String function, ExecutePackMessage.Test test) {
-        this.id = id;
-        this.script = script;
-        this.function = function;
+    public ExecuteTestMessage(ExecutePackMessage message, ExecutePackMessage.Test test) {
+        this.id = message.id;
+        this.script = message.script;
+        this.function = message.function;
         this.test = test;
     }
 }
