@@ -3,6 +3,7 @@ package ru.bmstu.hadoop.spark;
 import ru.bmstu.hadoop.validators.Validator;
 import scala.Serializable;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class OriginDestination implements Serializable {
@@ -33,5 +34,22 @@ public class OriginDestination implements Serializable {
 
     int getDestination() {
         return destination;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        OriginDestination that = (OriginDestination) o;
+        return origin == that.origin && destination == that.destination;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(origin, destination);
     }
 }

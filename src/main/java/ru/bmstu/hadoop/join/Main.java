@@ -19,7 +19,7 @@ public class Main implements Tool {
     }
 
     public int run(String[] args) throws Exception {
-        Job job = Job.getInstance(configuration, "L2");
+        Job job = Job.getInstance(configuration);
         job.setJarByClass(Main.class);
 
         job.setReducerClass(JoinReducer.class);

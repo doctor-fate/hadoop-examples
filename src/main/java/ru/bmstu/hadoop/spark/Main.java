@@ -28,7 +28,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        SparkConf configuration = new SparkConf().setAppName("L4");
+        SparkConf configuration = new SparkConf();
         try (JavaSparkContext context = new JavaSparkContext(configuration)) {
             JavaPairRDD<OriginDestination, Flight> flights = context.textFile("FLIGHTS.csv")
                     .mapToPair(Main::parseFlight)
@@ -50,3 +50,7 @@ public class Main {
         }
     }
 }
+
+// 2. Часы по дням недели больше всего опоздавших.
+// 3. Кол-во опозданий в обе стороны. Сумма. Сортировка
+// 4. Для каждой буквы алфавита опоздания прилет.
