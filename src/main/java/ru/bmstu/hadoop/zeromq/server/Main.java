@@ -15,14 +15,14 @@ public class Main {
         final ZMQ.Context context = ZMQ.context(1);
 
         WebSocketProtocolHandshakeHandler websocket = Handlers.websocket((exchange, channel) -> {
-            channel.getReceiveSetter().set(new WebSocketHandler(context, args[0]));
+            channel.getReceiveSetter().set(new WebSocketHandler(context));
             channel.resumeReceives();
         });
 
         ResourceHandler resources = Handlers.resource(new ClassPathResourceManager(Main.class.getClassLoader(), ""))
                 .addWelcomeFiles("index.html");
 
-        int port = Integer.parseInt(args[0].split(":")[2]) + 1000;
+        int port = Integer.parseInt(args[0]);
         Undertow server = Undertow.builder()
                 .addHttpListener(port, "127.0.0.1")
                 .setHandler(Handlers.path().addPrefixPath("/chatsocket", websocket).addPrefixPath("/", resources))
@@ -33,7 +33,7 @@ public class Main {
 
         new Thread(() -> {
             ZMQ.Socket frontend = context.socket(ZMQ.PULL);
-            frontend.bind(args[0]);
+            frontend.bind("inproc://messaging");
             ZMQ.Socket backend = context.socket(ZMQ.PUB);
             backend.connect(args[1]);
 
@@ -51,9 +51,8 @@ public class Main {
         System.in.read();
 
         server.stop();
-
         subscriber.shutdown();
-
-        context.term(); //never returns
+        /* ThreadLocal bug!!! Never returns. */
+        context.term();
     }
 }

@@ -26,7 +26,7 @@ public class SubscriberThread extends Thread {
 
     public void run() {
         while (!exit.get()) {
-            final String data = socket.recvStr(ZMQ.NOBLOCK);
+            final String data = socket.recvStr(ZMQ.DONTWAIT);
             if (data != null) {
                 for (WebSocketChannel session : handler.getPeerConnections()) {
                     WebSockets.sendText(data, session, null);

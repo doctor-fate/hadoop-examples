@@ -7,22 +7,17 @@ import org.zeromq.ZMQ;
 
 public class WebSocketHandler extends AbstractReceiveListener {
     private final static ThreadLocal<ZMQ.Socket> socket = new ThreadLocal<>();
-    private final ZMQ.Context context;
-    private final String address;
 
-    WebSocketHandler(ZMQ.Context context, String address) {
-        this.context = context;
-        this.address = address;
+    WebSocketHandler(final ZMQ.Context context) {
+        if (socket.get() == null) {
+            ZMQ.Socket s = context.socket(ZMQ.PUSH);
+            s.connect("inproc://messaging");
+            socket.set(s);
+        }
     }
 
     @Override
     protected void onFullTextMessage(WebSocketChannel channel, BufferedTextMessage message) {
-        ZMQ.Socket push = socket.get();
-        if (push == null) {
-            push = context.socket(ZMQ.PUSH);
-            push.connect(address);
-            socket.set(push);
-        }
-        push.send(message.getData());
+        socket.get().send(message.getData());
     }
 }
